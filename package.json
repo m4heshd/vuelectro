@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "electron-run": "electron electron-main.js"
+    "electron-run": "electron electron-main.js",
+    "build-run": "vue-cli-service build && electron electron-main.js"
   },
   "dependencies": {
     "core-js": "^3.6.5",
