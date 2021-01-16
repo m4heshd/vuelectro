@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "electron:run": "electron electron-main.js",
     "electron:serve": "node vue.electron.js serve",
-    "electron:prod": "vue-cli-service build && electron electron-main.js"
+    "electron:prod": "vue-cli-service build --mode=development && electron electron-main.js",
+    "electron:build": "vue-cli-service build && electron electron-main.js"
   },
   "dependencies": {
     "core-js": "^3.6.5",
