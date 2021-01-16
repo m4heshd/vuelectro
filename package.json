@@ -5,10 +5,11 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "electron:run": "cross-env VUETRON_ENV=run electron electron-main.js",
-    "electron:serve": "cross-env VUETRON_ENV=serve node vue.electron.js serve",
-    "electron:prod": "cross-env VUETRON_ENV=prod vue-cli-service build --mode=development && electron electron-main.js",
-    "electron:build": "cross-env VUETRON_ENV=build vue-cli-service build && electron electron-main.js"
+    "electron:run": "cross-env VUELECTRO_ENV=run electron electron-main.js",
+    "electron:serve": "cross-env VUELECTRO_ENV=serve node vue.electron.js serve",
+    "electron:dev:prod": "vue-cli-service build --mode=development && cross-env VUELECTRO_ENV=devprod electron electron-main.js",
+    "electron:prod": "vue-cli-service build && cross-env VUELECTRO_ENV=prod electron electron-main.js",
+    "electron:build": "vue-cli-service build && cross-env VUELECTRO_ENV=build electron electron-main.js"
   },
   "dependencies": {
     "core-js": "^3.6.5",

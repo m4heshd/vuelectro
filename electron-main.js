@@ -8,15 +8,18 @@ process.on('uncaughtException', (error => {
 const { app, BrowserWindow } = require('electron');
 let installExtension = require('electron-devtools-installer').default;
 
-// Get and switch Vuetron build type
-let VUETRON_ENV = process.env.VUETRON_ENV;
+// Get and switch Vuelectro build type
+let VUELECTRO_ENV = process.env.VUELECTRO_ENV;
 
 let rndURL = `file://${__dirname}/dist/index.html`;
 let isDev = true;
 
-switch (VUETRON_ENV) {
+switch (VUELECTRO_ENV) {
     case 'serve':
         rndURL = 'http://localhost:8080/';
+        break;
+    case 'prod':
+        isDev = false;
         break;
     case 'build':
         rndURL = 'app://./index.html';
