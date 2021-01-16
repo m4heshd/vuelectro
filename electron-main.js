@@ -1,3 +1,9 @@
+'use strict'
+
+process.on('uncaughtException', (error => {
+    console.error(error);
+}));
+
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 let installExtension = require('electron-devtools-installer').default;
@@ -48,4 +54,8 @@ app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }
+});
+
+app.on('quit', () => {
+    process.exit(0);
 });
