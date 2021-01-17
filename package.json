@@ -1,6 +1,16 @@
 {
-  "name": "vue-electron-tests",
-  "version": "0.1.0",
+  "name": "vuelectro-minimal",
+  "description": "Bare minimum, simplistic, production ready boilerplate/build tool for developing with Electron and Vue.Js",
+  "version": "1.0.0",
+  "keywords": [
+    "vuelectro",
+    "vue.js",
+    "electron",
+    "electron-builder",
+    "vue-cli",
+    "vue 3"
+  ],
+  "author": "Mahesh Bandara Wijerathna",
   "private": true,
   "main": "electron-main.js",
   "scripts": {
@@ -10,7 +20,8 @@
     "electron:serve": "cross-env VUELECTRO_ENV=serve node vue.electron.js serve",
     "electron:dev:prod": "vue-cli-service build --mode=development && cross-env VUELECTRO_ENV=devprod electron electron-main.js",
     "electron:prod": "vue-cli-service build && cross-env VUELECTRO_ENV=prod electron electron-main.js",
-    "electron:build": "node vue.electron.js build"
+    "electron:build": "node vue.electron.js build",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -28,5 +39,10 @@
     "electron": "11.1.1",
     "electron-builder": "22.9.1",
     "electron-devtools-installer": "3.1.1"
-  }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }
