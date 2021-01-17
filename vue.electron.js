@@ -1,7 +1,8 @@
 const {spawn} = require('child_process');
 const path = require('path');
+const builder = require('electron-builder');
 const vueService = require('@vue/cli-service');
-const {info, error} = require('@vue/cli-shared-utils');
+const {info, done, error} = require('@vue/cli-shared-utils');
 
 const service = new vueService(process.cwd());
 
@@ -11,8 +12,30 @@ switch (args[0]) {
     case 'serve':
         serveDev();
         break;
+    case 'build':
+        buildProd();
+        break;
     default:
         console.error('Invalid argument');
+}
+
+let buildConfig = {
+    vuelectro: {},
+    electron_builder: {
+        appId: 'Vuelectro',
+        win: {
+            target: ['nsis']
+        },
+        directories: {
+            output: 'dist_electron'
+        },
+        files: [
+            "!src${/*}",
+            "!babel.config.js",
+            "!vue.config.js",
+            "!vue.electron.js"
+        ]
+    }
 }
 
 function serveDev() {
@@ -24,6 +47,21 @@ function serveDev() {
 
         electron.on('exit', function (code) {
             process.exit(0);
+        });
+    }).catch((err) => {
+        error(err.stack);
+    });
+}
+
+function buildProd() {
+    service.init("production");
+    service.run('build').then(() => {
+        info('Packaging Electron app...');
+
+        builder.build({config: buildConfig.electron_builder}).then(() => {
+            done('Build successful');
+        }).catch((error) => {
+            error(error.stack);
         });
     }).catch((err) => {
         error(err.stack);

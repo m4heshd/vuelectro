@@ -6,23 +6,22 @@ process.on('uncaughtException', (error => {
 }));
 
 const { app, BrowserWindow } = require('electron');
-let installExtension = require('electron-devtools-installer').default;
 
 // Get and switch Vuelectro build type
-let VUELECTRO_ENV = process.env.VUELECTRO_ENV;
+let VUELECTRO_ENV = process.env.VUELECTRO_ENV ? process.env.VUELECTRO_ENV : 'build';
 
 let rndURL = `file://${__dirname}/dist/index.html`;
-let isDev = true;
+let isDev = false;
 
 switch (VUELECTRO_ENV) {
+    case 'run' || 'devprod':
+        isDev = true;
+        break;
     case 'serve':
+        isDev = true;
         rndURL = 'http://localhost:8080/';
         break;
-    case 'prod':
-        isDev = false;
-        break;
-    case 'build':
-        rndURL = 'app://./index.html';
+    case 'prod' || 'build':
         isDev = false;
         break;
 }
@@ -49,7 +48,7 @@ app.on('ready', async () => {
     if (isDev) {
         // Install Vue Devtools
         try {
-            await installExtension({
+            await require('electron-devtools-installer').default({
                 id: 'ljjemllljcmogpfapbkkighbhhppjdbg', //Vue Devtools beta
                 electron: '>=1.2.1'
             })
@@ -61,11 +60,9 @@ app.on('ready', async () => {
     createWindow();
 });
 
-// Prevent app from hanging around if all windows are closed on mac
+// Prevent app from hanging around if all windows are closed
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    app.quit();
 });
 
 app.on('activate', () => {
