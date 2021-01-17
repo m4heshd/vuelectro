@@ -3,6 +3,7 @@ const path = require('path');
 const builder = require('electron-builder');
 const vueService = require('@vue/cli-service');
 const {info, done, error} = require('@vue/cli-shared-utils');
+const buildConfig = require('./vuelectro.config');
 
 const service = new vueService(process.cwd());
 
@@ -17,25 +18,6 @@ switch (args[0]) {
         break;
     default:
         console.error('Invalid argument');
-}
-
-let buildConfig = {
-    vuelectro: {},
-    electron_builder: {
-        appId: 'Vuelectro',
-        win: {
-            target: ['nsis']
-        },
-        directories: {
-            output: 'dist_electron'
-        },
-        files: [
-            "!src${/*}",
-            "!babel.config.js",
-            "!vue.config.js",
-            "!vue.electron.js"
-        ]
-    }
 }
 
 function serveDev() {
