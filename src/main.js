@@ -7,4 +7,4 @@ const path = require('path');
 
 createApp(App).use(store).use(router).mount('#app')
 
-console.log(path.resolve(__dirname));
+console.log(path.resolve(process.cwd()));

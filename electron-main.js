@@ -1,6 +1,6 @@
 'use strict'
 
-// This intercepts the error message box shown by Electron in case of an uncaughtException
+// This intercepts the error message box shown by Electron in case of an uncaughtException. Needs to be on top of the main process.
 process.on('uncaughtException', (error => {
     console.error(error);
 }));
@@ -10,19 +10,18 @@ const { app, BrowserWindow } = require('electron');
 // Get and switch Vuelectro build type
 let VUELECTRO_ENV = process.env.VUELECTRO_ENV || 'build';
 
-let rndURL = `file://${__dirname}/dist/index.html`;
-let isDev = false;
+let rndURL = `file://${__dirname}/dist/index.html`; //Renderer entry URL
+let isDev = false; //Set the Electron environment to development or production
 
+//Change running environment and renderer source according to the executed command
 switch (VUELECTRO_ENV) {
-    case 'run' || 'devprod':
+    case 'run':
+    case 'devprod':
         isDev = true;
         break;
     case 'serve':
         isDev = true;
         rndURL = 'http://localhost:8080/';
-        break;
-    case 'prod' || 'build':
-        isDev = false;
         break;
 }
 
@@ -73,5 +72,5 @@ app.on('activate', () => {
 
 // End main process if Electron instance has already been terminated
 app.on('quit', () => {
-    process.exit(0);
+    process.exit();
 });
