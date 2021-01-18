@@ -13,7 +13,8 @@ module.exports = {
             "!src${/*}",
             "!babel.config.js",
             "!vue.config.js",
-            "!vue.electron.js"
+            "!vuelectro.config.js",
+            "!vuelectro.js"
         ]
     }
 }

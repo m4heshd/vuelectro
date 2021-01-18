@@ -8,7 +8,7 @@ process.on('uncaughtException', (error => {
 const { app, BrowserWindow } = require('electron');
 
 // Get and switch Vuelectro build type
-let VUELECTRO_ENV = process.env.VUELECTRO_ENV ? process.env.VUELECTRO_ENV : 'build';
+let VUELECTRO_ENV = process.env.VUELECTRO_ENV || 'build';
 
 let rndURL = `file://${__dirname}/dist/index.html`;
 let isDev = false;
