@@ -4,6 +4,7 @@ const fs = require('fs-extra');
 const builder = require('electron-builder');
 const vueService = require('@vue/cli-service');
 const {info, done, error} = require('@vue/cli-shared-utils');
+const webpack = require('webpack');
 const buildConfig = require('./vuelectro.config');
 
 const projectDir = process.cwd();
@@ -20,7 +21,7 @@ switch (args[0]) {
         buildProd();
         break;
     case 'compilemain':
-        compileMain();
+        compileMain().catch(err => error(err));
         break;
     default:
         console.error('Invalid argument');
@@ -29,15 +30,15 @@ switch (args[0]) {
 function serveDev() {
     service.init("development");
     service.run('serve').then(({server, url}) => {
-        compileMain();
+        compileMain().then(() => {
+            info('Launching Electron...');
 
-        info('Launching Electron...');
+            let electron = spawn(path.join(projectDir, 'node_modules', '.bin', process.platform === 'win32' ? 'electron.cmd' : 'electron'), ['app/electron-main.js'], {stdio: 'inherit'});
 
-        let electron = spawn(path.join(projectDir, 'node_modules', '.bin', process.platform === 'win32' ? 'electron.cmd' : 'electron'), ['app/electron-main.js'], {stdio: 'inherit'});
-
-        electron.on('exit', function (code) {
-            process.exit(0);
-        });
+            electron.on('exit', function (code) {
+                process.exit(0);
+            });
+        }).catch(err => error(err));
     }).catch((err) => {
         error(err.stack);
     });
@@ -46,34 +47,89 @@ function serveDev() {
 function buildProd() {
     service.init("production");
     service.run('build').then(() => {
-        compileMain();
+        compileMain('production').then(() => {
+            info('Packaging Electron app...');
 
-        info('Packaging Electron app...');
-
-        builder.build({config: buildConfig.electron_builder}).then(() => {
-            done('Build successful');
-        }).catch((error) => {
-            error(error.stack);
-        });
+            builder.build({config: buildConfig.electron_builder}).then(() => {
+                done('Build successful');
+            }).catch((err) => {
+                error(err.stack);
+            });
+        }).catch(err => error(err));
     }).catch((err) => {
         error(err.stack);
     });
 }
 
-function compileMain() {
+function compileMain(mode = 'development') {
     info('Building main process..\n');
-    copyMain();
-    console.log();
-    done('Main process build completed\n')
+
+    return new Promise((resolve, reject) => {
+        if (buildConfig.vMain.bundle) {
+            webpackMain(mode).then(() => {
+                console.log();
+                done('Main process build completed\n')
+                resolve();
+            }).catch((err) => {
+                reject(err);
+            });
+        } else {
+            copyMain().then(() => {
+                console.log();
+                done('Main process build completed\n')
+                resolve();
+            }).catch((err) => {
+                reject(err);
+            });
+        }
+    });
 }
 
 function copyMain() {
-    buildConfig.vMain.srcFiles.forEach((file, idx) => {
-        try {
-            fs.copySync(path.join(projectDir, 'src', file), path.join(projectDir, 'app', file));
-            console.log(`[${idx + 1}].. ${path.parse(file).base} ✔`);
-        } catch (err) {
-            error(err);
+    return new Promise((resolve, reject) => {
+        let _err;
+        buildConfig.vMain.srcFiles.forEach((file, idx) => {
+            try {
+                fs.copySync(path.join(projectDir, 'src', file), path.join(projectDir, 'app', file));
+                console.log(`[${idx + 1}].. ${path.parse(file).base} √`);
+            } catch (err) {
+                _err = err;
+            }
+        });
+        _err ? reject(_err) : resolve();
+    });
+}
+
+function webpackMain(_mode) {
+    return new Promise((resolve, reject) => {
+        let sourceMap = false;
+        if (_mode === 'production') {
+            if (buildConfig.vMain.productionSourceMap) {
+                sourceMap = buildConfig.vMain.webpackConfig.devtool;
+            }
+        } else {
+            sourceMap = buildConfig.vMain.webpackConfig.devtool;
         }
+
+        webpack({
+            mode: _mode,
+            ...buildConfig.vMain.webpackConfig,
+            devtool: sourceMap
+        }, (err, stats) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            if (stats.hasErrors()) {
+                reject(stats.toJson().errors);
+                return;
+            }
+
+            console.log(stats.toString({
+                chunks: false,
+                colors: true
+            }));
+            resolve();
+        });
     });
 }
