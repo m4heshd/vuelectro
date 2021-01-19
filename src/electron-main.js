@@ -10,7 +10,7 @@ const { app, BrowserWindow } = require('electron');
 // Get and switch Vuelectro build type
 let VUELECTRO_ENV = process.env.VUELECTRO_ENV || 'build';
 
-let rndURL = `file://${__dirname}/dist/index.html`; //Renderer entry URL
+let rndURL = `file://${__dirname}/renderer/index.html`; //Renderer entry URL
 let isDev = false; //Set the Electron environment to development or production
 
 //Change running environment and renderer source according to the executed command

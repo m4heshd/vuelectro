@@ -2,6 +2,7 @@ const { dependencies } = require('./package.json')
 const { rendererBundleIn } = require('./vuelectro.config')
 
 module.exports = {
+    outputDir: './app/renderer',
     publicPath: '',
     productionSourceMap: true,
     configureWebpack: {

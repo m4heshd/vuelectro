@@ -12,19 +12,21 @@
   ],
   "author": "Mahesh Bandara Wijerathna",
   "private": true,
-  "main": "src/electron-main.js",
+  "main": "app/electron-main.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "electron:run": "cross-env VUELECTRO_ENV=run electron src/electron-main.js",
+    "electron:run": "cross-env VUELECTRO_ENV=run electron app/electron-main.js",
     "electron:serve": "cross-env VUELECTRO_ENV=serve node vuelectro.js serve",
-    "electron:dev:prod": "vue-cli-service build --mode=development && cross-env VUELECTRO_ENV=devprod electron src/electron-main.js",
-    "electron:prod": "vue-cli-service build && cross-env VUELECTRO_ENV=prod electron src/electron-main.js",
+    "electron:dev:prod": "vue-cli-service build --mode=development && node vuelectro.js compilemain && cross-env VUELECTRO_ENV=devprod electron app/electron-main.js",
+    "electron:prod": "vue-cli-service build && node vuelectro.js compilemain && cross-env VUELECTRO_ENV=prod electron app/electron-main.js",
     "electron:build": "node vuelectro.js build",
+    "electron:compile:main": "node vuelectro.js compilemain",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "fs-extra": "7.0.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
