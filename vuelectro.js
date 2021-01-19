@@ -25,7 +25,7 @@ function serveDev() {
     service.run('serve').then(({server, url}) => {
         info('Launching Electron...');
 
-        let electron = spawn(path.join('node_modules', '.bin', process.platform === 'win32' ? 'electron.cmd' : 'electron'), ['electron-main.js'], {stdio: 'inherit'});
+        let electron = spawn(path.join('node_modules', '.bin', process.platform === 'win32' ? 'electron.cmd' : 'electron'), ['src/electron-main.js'], {stdio: 'inherit'});
 
         electron.on('exit', function (code) {
             process.exit(0);
