@@ -5,6 +5,7 @@ const builder = require('electron-builder');
 const vueService = require('@vue/cli-service');
 const {info, done, error} = require('@vue/cli-shared-utils');
 const webpack = require('webpack');
+const JavaScriptObfuscator = require('javascript-obfuscator');
 const buildConfig = require('./vuelectro.config');
 
 const projectDir = process.cwd();
@@ -74,13 +75,23 @@ function compileMain(mode = 'development') {
                 reject(err);
             });
         } else {
-            copyMain().then(() => {
-                console.log();
-                done('Main process build completed\n')
-                resolve();
-            }).catch((err) => {
-                reject(err);
-            });
+            if (buildConfig.vMain.obfuscate) {
+                obfuscateMain(mode).then(() => {
+                    console.log();
+                    done('Main process build completed\n')
+                    resolve();
+                }).catch((err) => {
+                    reject(err);
+                });
+            } else {
+                copyMain().then(() => {
+                    console.log();
+                    done('Main process build completed\n')
+                    resolve();
+                }).catch((err) => {
+                    reject(err);
+                });
+            }
         }
     });
 }
@@ -105,7 +116,7 @@ function webpackMain(_mode) {
         let sourceMap = false;
         if (_mode === 'production') {
             if (buildConfig.vMain.productionSourceMap) {
-                sourceMap = buildConfig.vMain.webpackConfig.devtool;
+                sourceMap = buildConfig.vMain.webpackConfig.devtool || 'source-map';
             }
         } else {
             sourceMap = buildConfig.vMain.webpackConfig.devtool;
@@ -131,5 +142,43 @@ function webpackMain(_mode) {
             }));
             resolve();
         });
+    });
+}
+
+function obfuscateMain(_mode = 'development', files = buildConfig.vMain.srcFiles) {
+    info('Obfuscating your code..\n');
+
+    return new Promise((resolve, reject) => {
+        let _err;
+        let sourceMap = false;
+        if (_mode === 'production') {
+            if (buildConfig.vMain.productionSourceMap) {
+                sourceMap = buildConfig.vMain.obfuscatorConfig.sourceMap || true;
+            }
+        } else {
+            sourceMap = buildConfig.vMain.obfuscatorConfig.sourceMap;
+        }
+
+        buildConfig.vMain.srcFiles.forEach((file, idx) => {
+            try {
+                let srcData = fs.readFileSync(path.join(projectDir, 'src', file), 'utf8');
+                let filename = path.parse(file).base;
+
+                let srcObfuscated = JavaScriptObfuscator.obfuscate(srcData, {
+                    ...buildConfig.vMain.obfuscatorConfig,
+                    inputFileName: filename,
+                    sourceMapFileName: `${filename}.map`
+                });
+
+                fs.outputFileSync(path.join(projectDir, 'app', file), srcObfuscated.getObfuscatedCode());
+
+                if (sourceMap) fs.outputFileSync(path.join(projectDir, 'app', `${file}.map`), srcObfuscated.getSourceMap());
+
+                console.log(`[${idx + 1}].. ${path.parse(file).base} √`);
+            } catch (err) {
+                _err = err;
+            }
+        });
+        _err ? reject(_err) : resolve();
     });
 }

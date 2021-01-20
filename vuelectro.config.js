@@ -13,7 +13,8 @@ module.exports = {
     //Configuration for the main process
     vMain: {
         bundle: false, //Whether to webpack the main process or not
-        productionSourceMap: false, //Source map support for production in main process
+        obfuscate: true, //Whether to obfuscate the main process or not (recommended)
+        productionSourceMap: false, //Source map support for production in main process (Valid for both webpack and obfuscator)
 
         //An array of all the source files for the main process. Make sure to define each new main process source file you create here.
         //Also make sure to keep all your source files INSIDE the ./src/ directory
@@ -41,6 +42,38 @@ module.exports = {
                 __filename: false,
                 __dirname: false,
             }
+        },
+
+        //Obfuscation configuration for main process goes here
+        //Visit https://www.npmjs.com/package/javascript-obfuscator for instructions
+        obfuscatorConfig: {
+            sourceMap: true,
+            sourceMapMode: 'separate',
+            compact: true,
+            controlFlowFlattening: false,
+            deadCodeInjection: false,
+            debugProtection: false,
+            debugProtectionInterval: false,
+            disableConsoleOutput: false,
+            identifierNamesGenerator: 'hexadecimal',
+            log: false,
+            numbersToExpressions: false,
+            renameGlobals: false,
+            rotateStringArray: true,
+            selfDefending: false,
+            shuffleStringArray: true,
+            simplify: true,
+            splitStrings: false,
+            stringArray: true,
+            stringArrayEncoding: [],
+            stringArrayIndexShift: true,
+            stringArrayWrappersCount: 1,
+            stringArrayWrappersChainedCalls: true,
+            stringArrayWrappersParametersMaxCount: 2,
+            stringArrayWrappersType: 'variable',
+            stringArrayThreshold: 0.75,
+            unicodeEscapeSequence: false,
+            target: 'node'
         },
     },
 

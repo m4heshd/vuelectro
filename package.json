@@ -1,7 +1,7 @@
 {
   "name": "vuelectro-minimal",
   "description": "Bare minimum, simplistic, production ready boilerplate/build tool for developing with Electron and Vue.Js",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "keywords": [
     "vuelectro",
     "vue.js",
@@ -41,6 +41,7 @@
     "electron": "11.1.1",
     "electron-builder": "22.9.1",
     "electron-devtools-installer": "3.1.1",
+    "javascript-obfuscator": "2.10.2",
     "webpack": "4.46.0"
   },
   "browserslist": [
