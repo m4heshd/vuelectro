@@ -20,7 +20,8 @@ module.exports = {
         //Also make sure to keep all your source files INSIDE the ./src/ directory
         //Path should be relative to ./src/ directory. Vuelectro will mirror the filenames and directory structure to your output automatically
         srcFiles: [
-            'electron-main.js'
+            'electron-main.js',
+            'preload.js'
         ],
 
         //webpack configuration for main process goes here
