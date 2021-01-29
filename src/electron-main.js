@@ -6,14 +6,18 @@ process.on('uncaughtException', (error => {
 }));
 
 const { app, BrowserWindow } = require('electron');
+const path = require('path');
 
 // Get and switch Vuelectro build type
 let VUELECTRO_ENV = process.env.VUELECTRO_ENV || 'build';
 
-let rndURL = `file://${__dirname}/renderer/index.html`; //Renderer entry URL
-let isDev = false; //Set the Electron environment to development or production
+// Set a global variable for the resource path to be used throughout the app (both in main and renderer)
+global.__resPath = path.join(process.cwd(), 'resources')
 
-//Change running environment and renderer source according to the executed command
+let rndURL = `file://${__dirname}/renderer/index.html`; // Renderer entry URL
+let isDev = false; // Set the Electron environment to development or production
+
+// Change running environment and renderer source according to the executed command
 switch (VUELECTRO_ENV) {
     case 'run':
     case 'devprod':
@@ -22,6 +26,9 @@ switch (VUELECTRO_ENV) {
     case 'serve':
         isDev = true;
         rndURL = 'http://localhost:8080/';
+        break;
+    case 'build':
+        global.__resPath = process.resourcesPath;
         break;
 }
 
