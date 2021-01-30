@@ -25,7 +25,7 @@ switch (args[0]) {
         compileMain().catch(err => error(err));
         break;
     default:
-        console.error('Invalid argument');
+        error('Invalid argument');
 }
 
 function serveDev() {

@@ -57,7 +57,7 @@ app.on('ready', async () => {
         // Install Vue Devtools
         try {
             await require('electron-devtools-installer').default({
-                id: 'ljjemllljcmogpfapbkkighbhhppjdbg', //Vue Devtools beta
+                id: 'ljjemllljcmogpfapbkkighbhhppjdbg', // Vue Devtools beta
                 electron: '>=1.2.1'
             })
         } catch (e) {

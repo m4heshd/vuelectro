@@ -2,7 +2,7 @@ const {dependencies} = require('./package.json');
 const path = require('path');
 
 module.exports = {
-    //Specify the node modules you need for webpack to bundle into Vue renderer here
+    // Specify the node modules you need for webpack to bundle into Vue renderer here
     rendererBundleIn: [
         'core-js',
         'vue',
@@ -10,22 +10,22 @@ module.exports = {
         'vuex'
     ],
 
-    //Configuration for the main process
+    // Configuration for the main process
     vMain: {
-        bundle: false, //Whether to webpack the main process or not
-        obfuscate: true, //Whether to obfuscate the main process or not (recommended)
-        productionSourceMap: false, //Source map support for production in main process (Valid for both webpack and obfuscator)
+        bundle: false, // Whether to webpack the main process or not
+        obfuscate: true, // Whether to obfuscate the main process or not (recommended)
+        productionSourceMap: false, // Source map support for production in main process (Valid for both webpack and obfuscator)
 
-        //An array of all the source files for the main process. Make sure to define each new main process source file you create here.
-        //Also make sure to keep all your source files INSIDE the ./src/ directory
-        //Path should be relative to ./src/ directory. Vuelectro will mirror the filenames and directory structure to your output automatically
+        // An array of all the source files for the main process. Make sure to define each new main process source file you create here.
+        // Also make sure to keep all your source files INSIDE the ./src/ directory
+        // Path should be relative to ./src/ directory. Vuelectro will mirror the filenames and directory structure to your output automatically
         srcFiles: [
             'electron-main.js',
             'preload.js'
         ],
 
-        //webpack configuration for main process goes here
-        //Visit https://webpack.js.org/guides/getting-started/#using-a-configuration for instructions
+        // webpack configuration for main process goes here
+        // Visit https://webpack.js.org/guides/getting-started/#using-a-configuration for instructions
         webpackConfig: {
             devtool: 'source-map',
             target: 'electron-main',
@@ -45,8 +45,8 @@ module.exports = {
             }
         },
 
-        //Obfuscation configuration for main process goes here
-        //Visit https://www.npmjs.com/package/javascript-obfuscator for instructions
+        // Obfuscation configuration for main process goes here
+        // Visit https://www.npmjs.com/package/javascript-obfuscator for instructions
         obfuscatorConfig: {
             sourceMap: true,
             sourceMapMode: 'separate',
@@ -78,8 +78,8 @@ module.exports = {
         },
     },
 
-    //electron-builder configuration goes here
-    //Visit https://www.electron.build/configuration/configuration for instructions
+    // electron-builder configuration goes here
+    // Visit https://www.electron.build/configuration/configuration for instructions
     electron_builder: {
         appId: "Vuelectro",
         win: {

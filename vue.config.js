@@ -3,8 +3,8 @@ const { rendererBundleIn } = require('./vuelectro.config')
 
 module.exports = {
     outputDir: './app/renderer',
-    publicPath: '',
-    productionSourceMap: true,
+    publicPath: '', // This is needed for the Electron renderer to load webpacked Vue source
+    productionSourceMap: true, // Set this to false when doing final builds
     configureWebpack: {
         devtool: 'source-map',
         target: 'electron-renderer',
