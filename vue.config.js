@@ -1,5 +1,5 @@
 const { dependencies } = require('./package.json')
-const { rendererBundleIn } = require('./vuelectro.config')
+const { vRenderer } = require('./vuelectro.config')
 
 module.exports = {
     outputDir: './app/renderer',
@@ -8,6 +8,6 @@ module.exports = {
     configureWebpack: {
         devtool: 'source-map',
         target: 'electron-renderer',
-        externals: Object.keys(dependencies || {}).filter(d => !rendererBundleIn.includes(d))
+        externals: Object.keys(dependencies || {}).filter(d => !vRenderer.bundleIn.includes(d))
     }
 }

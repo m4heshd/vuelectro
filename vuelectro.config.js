@@ -2,13 +2,16 @@ const {dependencies} = require('./package.json');
 const path = require('path');
 
 module.exports = {
-    // Specify the node modules you need for webpack to bundle into Vue renderer here
-    rendererBundleIn: [
-        'core-js',
-        'vue',
-        'vue-router',
-        'vuex'
-    ],
+    // Configuration for the renderer process
+    vRenderer: {
+        // Specify the node modules you need for webpack to bundle into Vue renderer here (others will be defined as webpack externals)
+        bundleIn: [
+            'core-js',
+            'vue',
+            'vue-router',
+            'vuex'
+        ]
+    },
 
     // Configuration for the main process
     vMain: {
