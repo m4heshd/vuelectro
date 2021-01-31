@@ -93,10 +93,12 @@ module.exports = {
         },
         files: [
             "!src${/*}",
+            "!public${/*}",
             "!babel.config.js",
             "!vue.config.js",
             "!vuelectro.config.js",
             "!vuelectro.js"
-        ]
+        ],
+        extraResources: [{from:'resources', to:'.'}]
     }
 }
