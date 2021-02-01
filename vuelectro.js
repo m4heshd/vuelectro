@@ -62,10 +62,6 @@ function editPkgJson() {
                     ...orgPkgJson.scripts,
                     ...tmpltDeps.scripts
                 },
-                "dependencies": {
-                    ...orgPkgJson.dependencies,
-                    ...tmpltDeps.dependencies
-                },
                 "devDependencies": {
                     ...orgPkgJson.devDependencies,
                     ...tmpltDeps.devDependencies
