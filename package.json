@@ -11,8 +11,10 @@
     "vue 3"
   ],
   "author": "Mahesh Bandara Wijerathna (m4heshd)",
-  "private": true,
   "main": "vuelectro.js",
+  "bin": {
+    "vuelectro": "./vuelectro.js"
+  },
   "scripts": {},
   "peerDependencies": {
     "@vue/cli-service": "4.5.0",

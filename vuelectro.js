@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const projectDir = process.cwd();
 
 const {spawn} = require('child_process');
