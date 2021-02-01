@@ -1,3 +1,5 @@
+const projectDir = process.cwd();
+
 const {spawn} = require('child_process');
 const path = require('path');
 const fs = require('fs-extra');
@@ -6,15 +8,16 @@ const vueService = require('@vue/cli-service');
 const {info, done, error} = require('@vue/cli-shared-utils');
 const webpack = require('webpack');
 const JavaScriptObfuscator = require('javascript-obfuscator');
-const buildConfig = require('./vuelectro.config');
-
-const projectDir = process.cwd();
+const buildConfig = require(path.join(projectDir, 'vuelectro.config.js'));
 
 const service = new vueService(projectDir);
 
 let args = process.argv.slice(2);
 
 switch (args[0]) {
+    case 'init':
+        initVuelectro();
+        break;
     case 'serve':
         serveDev();
         break;
@@ -26,6 +29,54 @@ switch (args[0]) {
         break;
     default:
         error('Invalid argument');
+}
+
+function initVuelectro() {
+    fs.pathExists(path.join(projectDir, 'vuelectro.config.js')).then((exists) => {
+        exists ? error('Vuelectro configuration already exists') : copyTemplate();
+    })
+}
+
+function copyTemplate() {
+    fs.copy(path.join(process.cwd(), 'template'), path.join(projectDir)).then(() => {
+        info('Template files copied\n');
+        editPkgJson();
+    }).catch(err => error(err));
+}
+
+function editPkgJson() {
+    let tmpltDeps;
+
+    fs.readJson('template-package.json').then((tmpltJson) => {
+        tmpltDeps = tmpltJson;
+
+        fs.readJson(path.join(projectDir, 'package.json')).then((orgPkgJson) => {
+            let newPkgJson = {
+                ...orgPkgJson,
+                main: tmpltDeps.main,
+                "scripts": {
+                    ...orgPkgJson.scripts,
+                    ...tmpltDeps.scripts
+                },
+                "dependencies": {
+                    ...orgPkgJson.dependencies,
+                    ...tmpltDeps.dependencies
+                },
+                "devDependencies": {
+                    ...orgPkgJson.devDependencies,
+                    ...tmpltDeps.devDependencies
+                },
+                browserslist: tmpltDeps.browserslist
+            };
+
+            fs.writeJsonSync(path.join(projectDir, 'package.json'), newPkgJson, {spaces: '  '});
+
+            fs.ensureDirSync(path.join(projectDir, 'resources'))
+
+            done('Vuelectro initialization completed successfully');
+
+        })
+    }).catch(err => error(err));
 }
 
 function serveDev() {
