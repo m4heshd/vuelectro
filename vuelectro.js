@@ -10,7 +10,7 @@ const vueService = require('@vue/cli-service');
 const {info, done, error} = require('@vue/cli-shared-utils');
 const webpack = require('webpack');
 const JavaScriptObfuscator = require('javascript-obfuscator');
-const buildConfig = require(path.join(projectDir, 'vuelectro.config.js'));
+let buildConfig = fs.pathExistsSync(path.join(projectDir, 'vuelectro.config.js')) ? require(path.join(projectDir, 'vuelectro.config')) : {};
 
 const service = new vueService(projectDir);
 
@@ -34,22 +34,24 @@ switch (args[0]) {
 }
 
 function initVuelectro() {
+    info('Initializing Vuelectro project..\n');
+
     fs.pathExists(path.join(projectDir, 'vuelectro.config.js')).then((exists) => {
         exists ? error('Vuelectro configuration already exists') : copyTemplate();
     })
 }
 
 function copyTemplate() {
-    fs.copy(path.join(process.cwd(), 'template'), path.join(projectDir)).then(() => {
+    fs.copy(path.join(__dirname, 'template'), path.join(projectDir)).then(() => {
         info('Template files copied\n');
         editPkgJson();
-    }).catch(err => error(err));
+    }).catch(err => console.error(err));
 }
 
 function editPkgJson() {
     let tmpltDeps;
 
-    fs.readJson('template-package.json').then((tmpltJson) => {
+    fs.readJson(path.join(__dirname, 'template-package.json')).then((tmpltJson) => {
         tmpltDeps = tmpltJson;
 
         fs.readJson(path.join(projectDir, 'package.json')).then((orgPkgJson) => {
@@ -72,10 +74,10 @@ function editPkgJson() {
             };
 
             fs.writeJsonSync(path.join(projectDir, 'package.json'), newPkgJson, {spaces: '  '});
+            fs.ensureDirSync(path.join(projectDir, 'resources'));
+            fs.removeSync(path.join(projectDir, '.browserslistrc'));
 
-            fs.ensureDirSync(path.join(projectDir, 'resources'))
-
-            done('Vuelectro initialization completed successfully');
+            done('Vuelectro initialization completed successfully. Try "npm run electron:serve"');
 
         })
     }).catch(err => error(err));
