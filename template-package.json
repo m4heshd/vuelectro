@@ -1,0 +1,28 @@
+{
+  "main": "app/electron-main.js",
+  "scripts": {
+    "electron:run": "cross-env VUELECTRO_ENV=run electron app/electron-main.js",
+    "electron:serve": "cross-env VUELECTRO_ENV=serve node vuelectro.js serve",
+    "electron:dev:prod": "vue-cli-service build --mode=development && node vuelectro.js compilemain && cross-env VUELECTRO_ENV=devprod electron app/electron-main.js",
+    "electron:prod": "vue-cli-service build && node vuelectro.js compilemain && cross-env VUELECTRO_ENV=prod electron app/electron-main.js",
+    "electron:build": "node vuelectro.js build",
+    "electron:compile:main": "node vuelectro.js compilemain",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "fs-extra": "7.0.1"
+  },
+  "devDependencies": {
+    "cross-env": "7.0.3",
+    "electron": "11.1.1",
+    "electron-builder": "22.9.1",
+    "electron-devtools-installer": "3.1.1",
+    "javascript-obfuscator": "2.10.3",
+    "webpack": "4.46.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
