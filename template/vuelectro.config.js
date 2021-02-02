@@ -5,6 +5,7 @@ module.exports = {
     // Configuration for the renderer process
     vRenderer: {
         // Specify the node modules you need for webpack to bundle into Vue renderer here (others will be defined as webpack externals)
+        // If you plan to disable nodeIntegration, make sure to include all of your dependencies here
         bundleIn: [
             'core-js',
             'vue',
@@ -36,9 +37,12 @@ module.exports = {
                 "electron-devtools-installer": "require('electron-devtools-installer')",
                 ...Object.keys(dependencies || {}).reduce((moduleObj, module) => (moduleObj[module] = `require('${module}')`, moduleObj), {})
             },
-            entry: path.join(process.cwd(), 'src', 'electron-main.js'),
+            entry: {
+                "electron-main": path.join(process.cwd(), 'src', 'electron-main.js'),
+                "preload": path.join(process.cwd(), 'src', 'preload.js'),
+            },
             output: {
-                filename: 'electron-main.js',
+                filename: '[name].js',
                 path: path.join(process.cwd(), 'app')
             },
             node: {
