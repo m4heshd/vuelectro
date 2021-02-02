@@ -11,8 +11,9 @@ const path = require('path');
 // Get and switch Vuelectro build type
 let VUELECTRO_ENV = process.env.VUELECTRO_ENV || 'build';
 
-// Set a global variable for the resource path to be used throughout the app (both in main and renderer)
+// Set a global variables for the resource path and Vue static path to be used throughout the app (both in main and renderer)
 global.__resPath = path.join(process.cwd(), 'resources');
+global.__staticPath = path.join(process.cwd(), 'public');
 
 let rndURL = `file://${__dirname}/renderer/index.html`; // Renderer entry URL
 let isDev = false; // Set the Electron environment to development or production
@@ -29,6 +30,7 @@ switch (VUELECTRO_ENV) {
         break;
     case 'build':
         global.__resPath = process.resourcesPath;
+        global.__staticPath = path.join(__dirname, 'renderer');
         break;
 }
 
@@ -41,7 +43,7 @@ function createWindow () {
             nodeIntegration: true,
             contextIsolation: false,
             preload: path.join(__dirname, 'preload.js'),
-            additionalArguments: [JSON.stringify({VUELECTRO_RES_PATH: __resPath})]
+            additionalArguments: [JSON.stringify({VUELECTRO_RES_PATH: __resPath, VUELECTRO_STATIC_PATH: __staticPath})]
         }
     });
 

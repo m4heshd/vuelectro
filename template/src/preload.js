@@ -1,4 +1,6 @@
-// Add the __resPath global variable to renderer process
+// Add __resPath & __staticPath global variables to renderer process
 process.once('loaded', () => {
-    global.__resPath = JSON.parse(process.argv.find(arg => arg.includes('VUELECTRO_RES_PATH'))).VUELECTRO_RES_PATH;
+    let VuelectroArgs = JSON.parse(process.argv.find(arg => arg.includes('VUELECTRO_RES_PATH')));
+    global.__resPath = VuelectroArgs.VUELECTRO_RES_PATH;
+    global.__staticPath = VuelectroArgs.VUELECTRO_STATIC_PATH;
 });
