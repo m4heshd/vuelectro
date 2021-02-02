@@ -87,6 +87,10 @@ function editPkgJson() {
             fs.ensureDirSync(path.join(projectDir, 'resources'));
             fs.removeSync(path.join(projectDir, '.browserslistrc'));
 
+            let gitignoreData = `\n# Vuelectro\n/dist_electron\n/app`
+            let gitignorePath = path.join(projectDir, '.gitignore');
+            fs.pathExistsSync(gitignorePath) ? fs.appendFileSync(gitignorePath, gitignoreData) : fs.outputFileSync(gitignorePath, gitignoreData);
+
             done('Vuelectro initialization completed successfully. Try "npm run electron:serve"');
 
         })
