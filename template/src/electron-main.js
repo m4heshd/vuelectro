@@ -12,7 +12,7 @@ const path = require('path');
 let VUELECTRO_ENV = process.env.VUELECTRO_ENV || 'build';
 
 // Set a global variable for the resource path to be used throughout the app (both in main and renderer)
-global.__resPath = path.join(process.cwd(), 'resources')
+global.__resPath = path.join(process.cwd(), 'resources');
 
 let rndURL = `file://${__dirname}/renderer/index.html`; // Renderer entry URL
 let isDev = false; // Set the Electron environment to development or production
@@ -41,7 +41,7 @@ function createWindow () {
             nodeIntegration: true,
             contextIsolation: false,
             preload: path.join(__dirname, 'preload.js'),
-            additionalArguments: [__resPath]
+            additionalArguments: [JSON.stringify({VUELECTRO_RES_PATH: __resPath})]
         }
     });
 
