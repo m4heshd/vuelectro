@@ -8,6 +8,7 @@ const fs = require('fs-extra');
 const builder = require('electron-builder');
 const vueService = require('@vue/cli-service');
 const {info, done, error} = require('@vue/cli-shared-utils');
+const inquirer = require('inquirer');
 const webpack = require('webpack');
 const JavaScriptObfuscator = require('javascript-obfuscator');
 let buildConfig = fs.pathExistsSync(path.join(projectDir, 'vuelectro.config.js')) ? require(path.join(projectDir, 'vuelectro.config')) : {};
@@ -37,7 +38,20 @@ function initVuelectro() {
     info('Initializing Vuelectro project..\n');
 
     fs.pathExists(path.join(projectDir, 'vuelectro.config.js')).then((exists) => {
-        exists ? error('Vuelectro configuration already exists') : copyTemplate();
+        if (exists) {
+            let no = {name: 'No', value: false};
+            inquirer.prompt({
+                type: 'list',
+                name: 'reinit',
+                message: 'Vuelectro configuration already exists. Re-initializing will replace your source files and configurations. Are you sure want to continue?',
+                choices: [no, no, no, no, no, {name: 'Ok, fine.', value: true}],
+                default: false
+            }).then(answers => {
+                answers.reinit ? copyTemplate() : info('Operation cancelled by user')
+            }).catch(error => console.error(error));
+        } else {
+            copyTemplate();
+        }
     })
 }
 
