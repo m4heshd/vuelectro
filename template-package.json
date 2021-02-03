@@ -3,8 +3,8 @@
   "scripts": {
     "electron:run": "cross-env VUELECTRO_ENV=run electron app/electron-main.js",
     "electron:serve": "cross-env VUELECTRO_ENV=serve vuelectro serve",
-    "electron:serve:file": "vue-cli-service build --mode=development && vuelectro compilemain && cross-env VUELECTRO_ENV=devprod electron app/electron-main.js",
-    "electron:prod": "vue-cli-service build && vuelectro compilemain && cross-env VUELECTRO_ENV=prod electron app/electron-main.js",
+    "electron:serve:file": "vuelectro clean && vue-cli-service build --mode=development && vuelectro compilemain && cross-env VUELECTRO_ENV=devprod electron app/electron-main.js",
+    "electron:prod": "vuelectro clean && vue-cli-service build && vuelectro compilemain && cross-env VUELECTRO_ENV=prod electron app/electron-main.js",
     "electron:compile:main": "vuelectro compilemain",
     "electron:compile:renderer": "vue-cli-service build --mode=development",
     "electron:build": "vuelectro build",

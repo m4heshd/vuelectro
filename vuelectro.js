@@ -11,7 +11,10 @@ const {info, done, error} = require('@vue/cli-shared-utils');
 const inquirer = require('inquirer');
 const webpack = require('webpack');
 const JavaScriptObfuscator = require('javascript-obfuscator');
+
 let buildConfig = fs.pathExistsSync(path.join(projectDir, 'vuelectro.config.js')) ? require(path.join(projectDir, 'vuelectro.config')) : {};
+const outDir = path.join(projectDir, 'app');
+const srcDir = path.join(projectDir, 'src');
 
 const service = new vueService(projectDir);
 
@@ -22,13 +25,19 @@ switch (args[0]) {
         initVuelectro();
         break;
     case 'serve':
+        cleanOutDir(true);
         serveDev();
         break;
     case 'build':
+        cleanOutDir(true);
         buildProd();
         break;
     case 'compilemain':
+        cleanOutDir();
         compileMain().catch(err => error(err));
+        break;
+    case 'clean':
+        cleanOutDir(true);
         break;
     default:
         error('Invalid argument');
@@ -97,6 +106,22 @@ function editPkgJson() {
     }).catch(err => error(err));
 }
 
+function cleanOutDir(cleanAll = false) {
+    try {
+        if (cleanAll) {
+            fs.emptyDirSync(outDir);
+        } else {
+            if (fs.existsSync(outDir)) {
+                fs.readdirSync(outDir).forEach(file => {
+                    if (file !== 'renderer') fs.removeSync(path.join(outDir, file));
+                });
+            }
+        }
+    } catch (err) {
+        error(err);
+    }
+}
+
 function serveDev() {
     service.init("development");
     service.run('serve').then(({server, url}) => {
@@ -119,6 +144,8 @@ function buildProd() {
     service.run('build').then(() => {
         compileMain('production').then(() => {
             info('Packaging Electron app...');
+
+            fs.emptyDirSync(path.join(projectDir, buildConfig.electron_builder.directories.output));
 
             builder.build({config: buildConfig.electron_builder}).then(() => {
                 done('Build successful');
@@ -170,7 +197,7 @@ function copyMain() {
         let _err;
         buildConfig.vMain.srcFiles.forEach((file, idx) => {
             try {
-                fs.copySync(path.join(projectDir, 'src', file), path.join(projectDir, 'app', file));
+                fs.copySync(path.join(srcDir, file), path.join(outDir, file));
                 console.log(`[${idx + 1}].. ${path.parse(file).base} √`);
             } catch (err) {
                 _err = err;
@@ -230,7 +257,7 @@ function obfuscateMain(_mode = 'development', files = buildConfig.vMain.srcFiles
 
         buildConfig.vMain.srcFiles.forEach((file, idx) => {
             try {
-                let srcData = fs.readFileSync(path.join(projectDir, 'src', file), 'utf8');
+                let srcData = fs.readFileSync(path.join(srcDir, file), 'utf8');
                 let filename = path.parse(file).base;
 
                 let srcObfuscated = JavaScriptObfuscator.obfuscate(srcData, {
@@ -239,9 +266,9 @@ function obfuscateMain(_mode = 'development', files = buildConfig.vMain.srcFiles
                     sourceMapFileName: `${filename}.map`
                 });
 
-                fs.outputFileSync(path.join(projectDir, 'app', file), srcObfuscated.getObfuscatedCode());
+                fs.outputFileSync(path.join(outDir, file), srcObfuscated.getObfuscatedCode());
 
-                if (sourceMap) fs.outputFileSync(path.join(projectDir, 'app', `${file}.map`), srcObfuscated.getSourceMap());
+                if (sourceMap) fs.outputFileSync(path.join(outDir, `${file}.map`), srcObfuscated.getSourceMap());
 
                 console.log(`[${idx + 1}].. ${path.parse(file).base} √`);
             } catch (err) {

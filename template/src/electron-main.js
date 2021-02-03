@@ -11,7 +11,7 @@ const path = require('path');
 // Get and switch Vuelectro build type
 let VUELECTRO_ENV = process.env.VUELECTRO_ENV || 'build';
 
-// Set a global variables for the resource path and Vue static path to be used throughout the app (both in main and renderer)
+// Set global variables for the resource path and Vue static path to be used throughout the app (both in main and renderer)
 global.__resPath = path.join(process.cwd(), 'resources');
 global.__staticPath = path.join(process.cwd(), 'public');
 
