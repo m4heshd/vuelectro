@@ -107,18 +107,20 @@ function editPkgJson() {
 }
 
 function cleanOutDir(cleanAll = false) {
-    try {
-        if (cleanAll) {
-            fs.emptyDirSync(outDir);
-        } else {
-            if (fs.existsSync(outDir)) {
-                fs.readdirSync(outDir).forEach(file => {
-                    if (file !== 'renderer') fs.removeSync(path.join(outDir, file));
-                });
+    if (buildConfig.cleanOutputDir) {
+        try {
+            if (cleanAll) {
+                fs.emptyDirSync(outDir);
+            } else {
+                if (fs.existsSync(outDir)) {
+                    fs.readdirSync(outDir).forEach(file => {
+                        if (file !== 'renderer') fs.removeSync(path.join(outDir, file));
+                    });
+                }
             }
+        } catch (err) {
+            error(err);
         }
-    } catch (err) {
-        error(err);
     }
 }
 
@@ -145,7 +147,7 @@ function buildProd() {
         compileMain('production').then(() => {
             info('Packaging Electron app...');
 
-            fs.emptyDirSync(path.join(projectDir, buildConfig.electron_builder.directories.output));
+            if (buildConfig.cleanOutputDir) fs.emptyDirSync(path.join(projectDir, buildConfig.electron_builder.directories.output));
 
             builder.build({config: buildConfig.electron_builder}).then(() => {
                 done('Build successful');

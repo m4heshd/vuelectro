@@ -2,6 +2,8 @@ const {dependencies} = require('./package.json');
 const path = require('path');
 
 module.exports = {
+    cleanOutputDir: true, // Whether to clean output directories before building source files or not
+
     // Configuration for the renderer process
     vRenderer: {
         // Specify the node modules you need for webpack to bundle into Vue renderer here (others will be defined as webpack externals)
