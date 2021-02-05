@@ -65,7 +65,7 @@ function initVuelectro() {
 }
 
 function copyTemplate() {
-    fs.copy(path.join(__dirname, 'template'), path.join(projectDir)).then(() => {
+    fs.copy(path.join(__dirname, 'template', 'projectfiles'), path.join(projectDir)).then(() => {
         info('Template files copied\n');
         editPkgJson();
     }).catch(err => console.error(err));
@@ -74,7 +74,7 @@ function copyTemplate() {
 function editPkgJson() {
     let tmpltDeps;
 
-    fs.readJson(path.join(__dirname, 'template-package.json')).then((tmpltJson) => {
+    fs.readJson(path.join(__dirname, 'template', 'template-package.json')).then((tmpltJson) => {
         tmpltDeps = tmpltJson;
 
         fs.readJson(path.join(projectDir, 'package.json')).then((orgPkgJson) => {
