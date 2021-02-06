@@ -11,6 +11,7 @@ const {info, done, error} = require('@vue/cli-shared-utils');
 const inquirer = require('inquirer');
 const webpack = require('webpack');
 const JavaScriptObfuscator = require('javascript-obfuscator');
+const request = require('request');
 
 let buildConfig = fs.pathExistsSync(path.join(projectDir, 'vuelectro.config.js')) ? require(path.join(projectDir, 'vuelectro.config')) : {};
 const outDir = path.join(projectDir, 'app');
@@ -77,7 +78,7 @@ function editPkgJson() {
     fs.readJson(path.join(__dirname, 'template', 'template-package.json')).then((tmpltJson) => {
         tmpltDeps = tmpltJson;
 
-        fs.readJson(path.join(projectDir, 'package.json')).then((orgPkgJson) => {
+        fs.readJson(path.join(projectDir, 'package.json')).then(async (orgPkgJson) => {
             let newPkgJson = {
                 ...orgPkgJson,
                 main: tmpltDeps.main,
@@ -92,6 +93,8 @@ function editPkgJson() {
                 browserslist: tmpltDeps.browserslist
             };
 
+            newPkgJson.devDependencies.electron = await askElectronVersion(newPkgJson.devDependencies.electron);
+
             fs.writeJsonSync(path.join(projectDir, 'package.json'), newPkgJson, {spaces: '  '});
             fs.ensureDirSync(path.join(projectDir, 'resources'));
             fs.removeSync(path.join(projectDir, '.browserslistrc'));
@@ -104,6 +107,38 @@ function editPkgJson() {
 
         })
     }).catch(err => error(err));
+}
+
+function askElectronVersion(current) {
+    return new Promise(resolve => {
+        request('https://registry.npmjs.org/-/package/electron/dist-tags', { json: true }, (err, res, body) => {
+            if (!err) {
+                if (body.latest) {
+                    inquirer.prompt({
+                        type: 'list',
+                        name: 'version',
+                        message: 'What version of Electron do you want to use?',
+                        choices: [
+                            {name: `${body.latest} (latest)`, value: body.latest},
+                            {name: `${current} (preset)`, value: body.latest},
+                            '10.3.2',
+                            '9.4.3',
+                            '8.5.5'],
+                        default: current
+                    }).then(answers => {
+                        console.log();
+                        resolve(answers.version);
+                    }).catch((err) => {
+                        error('Unable to show version selection. Choosing preset version.')
+                        resolve(current);
+                    });
+                } else { resolve(current); }
+            } else {
+                error('Failed to fetch the latest version of Electron. Choosing preset version.\n');
+                resolve(current);
+            }
+        });
+    });
 }
 
 function cleanOutDir(cleanAll = false) {
