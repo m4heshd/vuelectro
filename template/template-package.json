@@ -8,7 +8,8 @@
     "electron:compile:main": "vuelectro compilemain",
     "electron:compile:renderer": "vue-cli-service build --mode=development",
     "electron:build": "vuelectro build",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
     "cross-env": "7.0.3",
