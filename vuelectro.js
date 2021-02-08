@@ -174,7 +174,7 @@ function serveDev() {
         compileMain().then(() => {
             info('Launching Electron...');
 
-            let electron = spawn(path.join(projectDir, 'node_modules', '.bin', process.platform === 'win32' ? 'electron.cmd' : 'electron'), ['app/electron-main.js'], {stdio: 'inherit'});
+            let electron = spawn(path.join(projectDir, 'node_modules', '.bin', process.platform === 'win32' ? 'electron.cmd' : 'electron'), [...args.slice(1), 'app/electron-main.js'], {stdio: 'inherit'});
 
             electron.on('exit', function (code) {
                 process.exit(0);
