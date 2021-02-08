@@ -7,7 +7,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const builder = require('electron-builder');
 const vueService = require('@vue/cli-service');
-const {info, done, error} = require('@vue/cli-shared-utils');
+const {info, done, error, warn} = require('@vue/cli-shared-utils');
 const inquirer = require('inquirer');
 const webpack = require('webpack');
 const JavaScriptObfuscator = require('javascript-obfuscator');
@@ -57,7 +57,7 @@ function initVuelectro() {
                 choices: [no, no, no, no, no, {name: 'Ok, fine.', value: true}],
                 default: false
             }).then(answers => {
-                answers.reinit ? copyTemplate() : info('Operation cancelled by user')
+                answers.reinit ? copyTemplate() : warn('Operation cancelled by user')
             }).catch(error => console.error(error));
         } else {
             copyTemplate();
@@ -112,31 +112,32 @@ function editPkgJson() {
 function askElectronVersion(current) {
     return new Promise(resolve => {
         request('https://registry.npmjs.org/-/package/electron/dist-tags', { json: true }, (err, res, body) => {
-            if (!err) {
-                if (body.latest) {
-                    inquirer.prompt({
-                        type: 'list',
-                        name: 'version',
-                        message: 'What version of Electron do you want to use?',
-                        choices: [
-                            {name: `${body.latest} (latest)`, value: body.latest},
-                            {name: `${current} (preset)`, value: body.latest},
-                            '10.3.2',
-                            '9.4.3',
-                            '8.5.5'],
-                        default: current
-                    }).then(answers => {
-                        console.log();
-                        resolve(answers.version);
-                    }).catch((err) => {
-                        error('Unable to show version selection. Choosing preset version.')
-                        resolve(current);
-                    });
-                } else { resolve(current); }
+
+            let versions = [
+                {name: `${current} (preset)`, value: current},
+                '10.3.2',
+                '9.4.3',
+                '8.5.5'];
+
+            if (!err && body.latest) {
+                versions.unshift({name: `${body.latest} (latest)`, value: body.latest});
             } else {
-                error('Failed to fetch the latest version of Electron. Choosing preset version.\n');
-                resolve(current);
+                warn('Failed to fetch the latest version of Electron.\n');
             }
+
+            inquirer.prompt({
+                type: 'list',
+                name: 'version',
+                message: 'What version of Electron do you want to use?',
+                choices: versions,
+                default: current
+            }).then(answers => {
+                console.log();
+                resolve(answers.version);
+            }).catch(() => {
+                error('Unable to show version selection. Choosing preset version.')
+                resolve(current);
+            });
         });
     });
 }
