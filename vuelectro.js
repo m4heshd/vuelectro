@@ -12,6 +12,7 @@ const inquirer = require('inquirer');
 const webpack = require('webpack');
 const JavaScriptObfuscator = require('javascript-obfuscator');
 const request = require('request');
+const {install} = require('lmify');
 
 let buildConfig = fs.pathExistsSync(path.join(projectDir, 'vuelectro.config.js')) ? require(path.join(projectDir, 'vuelectro.config')) : {};
 const outDir = path.join(projectDir, 'app');
@@ -102,6 +103,13 @@ function editPkgJson() {
             let gitignoreData = `\n# Vuelectro\n/dist_electron\n/app`
             let gitignorePath = path.join(projectDir, '.gitignore');
             fs.pathExistsSync(gitignorePath) ? fs.appendFileSync(gitignorePath, gitignoreData) : fs.outputFileSync(gitignorePath, gitignoreData);
+
+            try {
+                await install(['']);
+                console.log();
+            } catch {
+                error('There was an error trying to install dependencies. Try running "npm install" manually.\n');
+            }
 
             done('Vuelectro initialization completed successfully. Try "npm run electron:serve"');
 

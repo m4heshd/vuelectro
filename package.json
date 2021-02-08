@@ -25,6 +25,7 @@
     "fs-extra": "7.0.1",
     "inquirer": "7.3.3",
     "javascript-obfuscator": "2.10.3",
+    "lmify": "0.3.0",
     "request": "2.88.2",
     "webpack": "4.46.0"
   }
