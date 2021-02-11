@@ -1,8 +1,19 @@
-<h2 align="center">  
-  <br>  
-<img src="https://i.ibb.co/VWtG26k/vuelectro-banner.png" alt="Vuelectro">  
-  <br>  
-Vuelectro: Minimal build tool for <a href="https://vuejs.org/">Vue.js</a> and <a href="https://www.electronjs.org/">Electron</a>  
+<h2 align="center">
+    <br>
+    <img src="https://i.ibb.co/VWtG26k/vuelectro-banner.png" alt="Vuelectro">
+    <br>
+    <img height="35">
+    Vuelectro: Minimal build tool for <a href="https://vuejs.org/">Vue.js</a> and <a href="https://www.electronjs.org/">Electron</a>
+    <br>
+    <img height="40">
+    <!--badges-->
+    <a href="https://www.npmjs.com/package/vuelectro">
+        <img src="https://img.shields.io/npm/v/vuelectro?color=cc3838&style=for-the-badge" alt="Vuelectro version">
+    </a> <!--NPM Version-->
+    <a href="https://github.com/m4heshd/vuelectro/blob/master/LICENSE">
+        <img src="https://img.shields.io/github/license/m4heshd/vuelectro?color=41b883&style=for-the-badge" alt="Vuelectro license">
+    </a> <!--License-->
+    <!---------->
 </h2>
 
 ### What is Vuelectro?
@@ -116,7 +127,7 @@ You can pass in any number of additional arguments at the end when running `vuel
 in your `package.json`:
 ```js
 "scripts": {
-	"electron:serve": "cross-env VUELECTRO_ENV=serve vuelectro serve --inspect=5858"
+    "electron:serve": "cross-env VUELECTRO_ENV=serve vuelectro serve --inspect=5858"
 }
 ```
 
