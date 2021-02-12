@@ -8,11 +8,17 @@
     <img height="40">
     <!--badges-->
     <a href="https://www.npmjs.com/package/vuelectro">
-        <img src="https://img.shields.io/npm/v/vuelectro?color=cc3838&style=for-the-badge" alt="Vuelectro version">
+        <img src="https://img.shields.io/npm/v/vuelectro?logo=npm&color=cc3838&style=for-the-badge" alt="Vuelectro version">
     </a> <!--NPM Version-->
     <a href="https://github.com/m4heshd/vuelectro/blob/master/LICENSE">
         <img src="https://img.shields.io/github/license/m4heshd/vuelectro?color=41b883&style=for-the-badge" alt="Vuelectro license">
     </a> <!--License-->
+    <a href="https://www.paypal.me/mpwk">
+        <img src="https://img.shields.io/static/v1?logo=paypal&label=%E2%80%8B&message=PayPal&color=blue&style=for-the-badge" alt="PayPal">
+    </a> <!--PayPal-->
+    <a href="https://ko-fi.com/m4heshd">
+        <img src="https://img.shields.io/static/v1?logo=ko-fi&label=%E2%80%8B&message=Ko-fi&color=ff5e5b&style=for-the-badge" alt="Ko-fi">
+    </a> <!--Ko-fi-->
     <!---------->
 </h2>
 
@@ -115,6 +121,10 @@ This might look like a lot but trust me these are useful.
 - **`electron:compile:renderer`** - Builds just the renderer process files (Vue source files) in development mode
 
 - **`electron:build`** - Builds and packages your application for production
+
+### Native modules
+
+You don't have to manually set anything up to make native modules work with webpack unless for a very specific scenario. Vuelectro is preconfigured to automatically pick up your dependencies in both main and renderer processes.
 
 ## Debugging
 
