@@ -91,9 +91,6 @@ module.exports = {
     // Visit https://www.electron.build/configuration/configuration for instructions
     electron_builder: {
         appId: "Vuelectro",
-        win: {
-            target: ["dir"]
-        },
         directories: {
             output: "dist_electron"
         },
