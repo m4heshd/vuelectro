@@ -8,6 +8,8 @@ module.exports = {
     configureWebpack: {
         devtool: 'source-map',
         target: 'electron-renderer',
-        externals: Object.keys(dependencies || {}).filter(d => !vRenderer.bundleIn.includes(d))
+        externals: {
+            ...Object.keys(dependencies || {}).filter(d => !vRenderer.bundleIn.includes(d)).reduce((moduleObj, module) => (moduleObj[module] = `require('${module}')`, moduleObj), {})
+        }
     }
 }
