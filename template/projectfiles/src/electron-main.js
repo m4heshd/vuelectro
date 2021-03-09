@@ -9,7 +9,7 @@ const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
 // Get and switch Vuelectro build type
-let VUELECTRO_ENV = process.env.VUELECTRO_ENV || 'build';
+process.env.VUELECTRO_ENV = process.env.VUELECTRO_ENV || 'build';
 
 // Set global variables for the resource path and Vue static path to be used throughout the app (both in main and renderer)
 global.__resPath = path.join(process.cwd(), 'resources');
@@ -19,7 +19,7 @@ let rndURL = `file://${__dirname}/renderer/index.html`; // Renderer entry URL
 let isDev = false; // Set the Electron environment to development or production
 
 // Change running environment and renderer source according to the executed command
-switch (VUELECTRO_ENV) {
+switch (process.env.VUELECTRO_ENV) {
     case 'run':
     case 'devprod':
         isDev = true;
@@ -43,7 +43,11 @@ function createWindow () {
             nodeIntegration: true,
             contextIsolation: false,
             preload: path.join(__dirname, 'preload.js'),
-            additionalArguments: [JSON.stringify({VUELECTRO_RES_PATH: __resPath, VUELECTRO_STATIC_PATH: __staticPath})]
+            additionalArguments: [JSON.stringify({
+                VUELECTRO_RES_PATH: __resPath,
+                VUELECTRO_STATIC_PATH: __staticPath,
+                VUELECTRO_ENV: process.env.VUELECTRO_ENV
+            })]
         }
     });
 
