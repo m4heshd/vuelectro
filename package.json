@@ -1,7 +1,7 @@
 {
   "name": "vuelectro",
   "description": "Bare minimum, simplistic, production ready boilerplate/build tool for developing with Electron and Vue.Js",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "private": false,
   "homepage": "https://github.com/m4heshd/vuelectro/",
   "repository": "https://github.com/m4heshd/vuelectro.git",
