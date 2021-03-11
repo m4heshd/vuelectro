@@ -10,6 +10,9 @@
     <a href="https://www.npmjs.com/package/vuelectro">
         <img src="https://img.shields.io/npm/v/vuelectro?logo=npm&color=cc3838&style=for-the-badge" alt="Vuelectro version">
     </a> <!--NPM Version-->
+    <a href="https://www.npmjs.com/package/vuelectro">
+        <img src="https://img.shields.io/npm/dt/vuelectro?color=2757c4&style=for-the-badge" alt="Vuelectro downloads">
+    </a> <!--Downloads-->
     <a href="https://github.com/m4heshd/vuelectro/blob/master/LICENSE">
         <img src="https://img.shields.io/github/license/m4heshd/vuelectro?color=41b883&style=for-the-badge" alt="Vuelectro license">
     </a> <!--License-->
