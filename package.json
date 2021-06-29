@@ -34,6 +34,7 @@
     "javascript-obfuscator": "2.15.5",
     "lmify": "0.3.0",
     "request": "2.88.2",
-    "webpack": "4.46.0"
+    "webpack": "4.46.0",
+    "webpack-obfuscator": "2.6.0"
   }
 }
