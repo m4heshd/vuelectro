@@ -1,6 +1,40 @@
 const {dependencies} = require('./package.json');
 const path = require('path');
 
+// Obfuscation configuration common for both main and renderer processes
+const universalObfuscatorConfig = {
+    sourceMap: process.env.VUELECTRO_ENV !== 'build',
+    sourceMapMode: 'separate',
+    compact: true,
+    controlFlowFlattening: false,
+    deadCodeInjection: false,
+    debugProtection: false,
+    debugProtectionInterval: false,
+    disableConsoleOutput: false,
+    identifierNamesGenerator: 'hexadecimal',
+    log: false,
+    numbersToExpressions: false,
+    renameGlobals: false,
+    rotateStringArray: true,
+    selfDefending: false,
+    shuffleStringArray: true,
+    simplify: true,
+    splitStrings: false,
+    stringArray: true,
+    stringArrayEncoding: [
+        'base64',
+        'rc4'
+    ],
+    stringArrayIndexShift: true,
+    stringArrayWrappersCount: 1,
+    stringArrayWrappersChainedCalls: true,
+    stringArrayWrappersParametersMaxCount: 2,
+    stringArrayWrappersType: 'variable',
+    stringArrayThreshold: 0.75,
+    unicodeEscapeSequence: false,
+    target: 'node'
+}
+
 module.exports = {
     cleanOutputDir: true, // Whether to clean output directories before building source files or not
 
@@ -13,7 +47,12 @@ module.exports = {
             'vue',
             'vue-router',
             'vuex'
-        ]
+        ],
+        obfuscate: true, // Whether to obfuscate the renderer process or not (recommended)
+
+        // Obfuscation configuration for renderer process goes here
+        // Visit https://www.npmjs.com/package/javascript-obfuscator for instructions
+        obfuscatorConfig: universalObfuscatorConfig
     },
 
     // Configuration for the main process
@@ -57,33 +96,8 @@ module.exports = {
         // Obfuscation configuration for main process goes here
         // Visit https://www.npmjs.com/package/javascript-obfuscator for instructions
         obfuscatorConfig: {
-            sourceMap: true,
-            sourceMapMode: 'separate',
-            compact: true,
-            controlFlowFlattening: false,
-            deadCodeInjection: false,
-            debugProtection: false,
-            debugProtectionInterval: false,
-            disableConsoleOutput: false,
-            identifierNamesGenerator: 'hexadecimal',
-            log: false,
-            numbersToExpressions: false,
-            renameGlobals: false,
-            rotateStringArray: true,
-            selfDefending: false,
-            shuffleStringArray: true,
-            simplify: true,
-            splitStrings: false,
-            stringArray: true,
-            stringArrayEncoding: [],
-            stringArrayIndexShift: true,
-            stringArrayWrappersCount: 1,
-            stringArrayWrappersChainedCalls: true,
-            stringArrayWrappersParametersMaxCount: 2,
-            stringArrayWrappersType: 'variable',
-            stringArrayThreshold: 0.75,
-            unicodeEscapeSequence: false,
-            target: 'node'
+            ...universalObfuscatorConfig,
+            sourceMap: true
         },
     },
 
@@ -103,6 +117,6 @@ module.exports = {
             "!vuelectro.config.js",
             "!vuelectro.js"
         ],
-        extraResources: [{from:'resources', to:'.'}]
+        extraResources: [{from: 'resources', to: '.'}]
     }
-}
+};
