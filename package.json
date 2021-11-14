@@ -28,7 +28,7 @@
     "@vue/cli-shared-utils": "^4.5.10"
   },
   "dependencies": {
-    "electron-builder": "22.11.7",
+    "electron-builder": "22.13.1",
     "fast-glob": "3.2.7",
     "fs-extra": "10.0.0",
     "inquirer": "8.1.1",
