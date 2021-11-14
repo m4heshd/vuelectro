@@ -123,9 +123,10 @@ function askElectronVersion(current) {
 
             let versions = [
                 {name: `${current} (preset)`, value: current},
-                '12.0.12',
-                '11.4.9',
-                '10.4.7'];
+                '15.3.1',
+                '14.2.0',
+                '13.6.1'
+            ];
 
             if (!err && body.latest) {
                 versions.unshift({name: `${body.latest} (latest)`, value: body.latest});
