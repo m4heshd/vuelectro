@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "electron-builder": "22.11.7",
+    "fast-glob": "3.2.7",
     "fs-extra": "10.0.0",
     "inquirer": "8.1.1",
     "javascript-obfuscator": "2.15.5",
