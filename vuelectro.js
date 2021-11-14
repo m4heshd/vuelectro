@@ -5,6 +5,7 @@ const projectDir = process.cwd();
 const {spawn} = require('child_process');
 const path = require('path');
 const fs = require('fs-extra');
+const glob = require('fast-glob');
 const builder = require('electron-builder');
 const vueService = require('@vue/cli-service');
 const {info, done, error, warn} = require('@vue/cli-shared-utils');
@@ -239,18 +240,12 @@ function compileMain(mode = 'development') {
     });
 }
 
-function copyMain() {
-    return new Promise((resolve, reject) => {
-        let _err;
-        buildConfig.vMain.srcFiles.forEach((file, idx) => {
-            try {
-                fs.copySync(path.join(srcDir, file), path.join(outDir, file));
-                console.log(`[${idx + 1}].. ${path.parse(file).base} √`);
-            } catch (err) {
-                _err = err;
-            }
-        });
-        _err ? reject(_err) : resolve();
+async function copyMain() {
+    const files = await glob(buildConfig.vMain.srcFiles, {cwd: srcDir});
+
+    files.forEach((file, idx) => {
+        fs.copySync(path.join(srcDir, file), path.join(outDir, file));
+        console.log(`[${idx + 1}].. ${path.parse(file).base} √`);
     });
 }
 
@@ -288,40 +283,35 @@ function webpackMain(_mode) {
     });
 }
 
-function obfuscateMain(_mode = 'development', files = buildConfig.vMain.srcFiles) {
+async function obfuscateMain(_mode = 'development') {
     info('Obfuscating your code..\n');
 
-    return new Promise((resolve, reject) => {
-        let _err;
-        let sourceMap = false;
-        if (_mode === 'production') {
-            if (buildConfig.vMain.productionSourceMap) {
-                sourceMap = buildConfig.vMain.obfuscatorConfig.sourceMap || true;
-            }
-        } else {
-            sourceMap = buildConfig.vMain.obfuscatorConfig.sourceMap;
+    let sourceMap = false;
+
+    if (_mode === 'production') {
+        if (buildConfig.vMain.productionSourceMap) {
+            sourceMap = buildConfig.vMain.obfuscatorConfig.sourceMap || true;
         }
+    } else {
+        sourceMap = buildConfig.vMain.obfuscatorConfig.sourceMap;
+    }
 
-        buildConfig.vMain.srcFiles.forEach((file, idx) => {
-            try {
-                let srcData = fs.readFileSync(path.join(srcDir, file), 'utf8');
-                let filename = path.parse(file).base;
+    const files = await glob(buildConfig.vMain.srcFiles, {cwd: srcDir});
 
-                let srcObfuscated = JavaScriptObfuscator.obfuscate(srcData, {
-                    ...buildConfig.vMain.obfuscatorConfig,
-                    inputFileName: filename,
-                    sourceMapFileName: `${filename}.map`
-                });
+    files.forEach((file, idx) => {
+        let srcData = fs.readFileSync(path.join(srcDir, file), 'utf8');
+        let filename = path.parse(file).base;
 
-                fs.outputFileSync(path.join(outDir, file), srcObfuscated.getObfuscatedCode());
-
-                if (sourceMap) fs.outputFileSync(path.join(outDir, `${file}.map`), srcObfuscated.getSourceMap());
-
-                console.log(`[${idx + 1}].. ${path.parse(file).base} √`);
-            } catch (err) {
-                _err = err;
-            }
+        let srcObfuscated = JavaScriptObfuscator.obfuscate(srcData, {
+            ...buildConfig.vMain.obfuscatorConfig,
+            inputFileName: filename,
+            sourceMapFileName: `${filename}.map`
         });
-        _err ? reject(_err) : resolve();
+
+        fs.outputFileSync(path.join(outDir, file), srcObfuscated.getObfuscatedCode());
+
+        if (sourceMap) fs.outputFileSync(path.join(outDir, `${file}.map`), srcObfuscated.getSourceMap());
+
+        console.log(`[${idx + 1}].. ${path.parse(file).base} √`);
     });
 }

@@ -64,6 +64,7 @@ module.exports = {
         // An array of all the source files for the main process. Make sure to define each new main process source file you create here.
         // Also make sure to keep all your source files INSIDE the ./src/ directory
         // Path should be relative to ./src/ directory. Vuelectro will mirror the filenames and directory structure to your output automatically
+        // Supports globs eg: ['**.js', 'data/*.json']
         srcFiles: [
             'electron-main.js',
             'preload.js'
